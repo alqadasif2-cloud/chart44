@@ -12,6 +12,14 @@ import logging
 import threading
 from typing import Dict, Any, Optional
 
+# Ensure stdout/stderr handles UTF-8 or falls back to replace without UnicodeEncodeError on Windows
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Safe relative or package-level imports
 try:
     from backend.config import (

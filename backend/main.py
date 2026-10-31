@@ -14,6 +14,14 @@ import logging
 import threading
 from typing import Dict, Any, Optional
 
+# Ensure stdout/stderr handles UTF-8 or falls back to replace without UnicodeEncodeError on Windows
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Ensure directories are in sys.path
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(CURRENT_DIR)
@@ -84,9 +92,9 @@ def on_startup():
     """Starts MT5 connector and background health watchdog."""
     bits = struct.calcsize("P") * 8
     print("=" * 76, flush=True)
-    print("  🚀 شارت - cchart | MetaTrader 5 Windows Desktop Bridge", flush=True)
-    print(f"  🐍 Python Interpreter : {sys.executable}", flush=True)
-    print(f"  📦 Python Version     : {sys.version.split()[0]} ({bits}-bit)", flush=True)
+    print("  [LAUNCH] cchart | MetaTrader 5 Windows Desktop Bridge", flush=True)
+    print(f"  [PYTHON] Interpreter : {sys.executable}", flush=True)
+    print(f"  [VERSION] Version    : {sys.version.split()[0]} ({bits}-bit)", flush=True)
     print("=" * 76, flush=True)
     mt5_connector.start_background_monitor()
     mt5_connector.initialize_and_connect()
