@@ -1,0 +1,6 @@
+{
+  "name": "شارت - cchart",
+  "description": "منصة شارت مالية تفاعلية لتحليل العملات الرقمية والذهب والفوركس مع مؤشرات فنية وأدوات رسم وميزة إعادة التشغيل والبث المباشر للأسعار.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

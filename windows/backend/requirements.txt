@@ -1,0 +1,24 @@
+# ==============================================================================
+# MetaTrader 5 Desktop Bridge Requirements (Windows 10/11 64-bit)
+# Python 3.11 Compatible Dependencies
+# ==============================================================================
+
+# Official MetaTrader 5 Python Integration for Windows 64-bit
+MetaTrader5>=5.0.45
+
+# High-Performance Numerical & Data Processing
+numpy>=1.24.0,<2.2.0
+pandas>=2.0.0
+
+# High-Speed Local Communication & WebSocket Streaming
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+websockets>=12.0
+pydantic>=2.0.0
+
+# Native Windows Desktop Application Window (Microsoft Edge WebView2)
+pywebview>=5.0.0
+
+# Optional Windows Executable Builder & Utilities
+pyinstaller>=6.4.0
+requests>=2.31.0
