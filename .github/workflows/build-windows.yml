@@ -29,10 +29,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
 
-      - name: 3. Install Frontend Dependencies
-        run: npm install --legacy-peer-deps
+      - name: 3. Install Frontend Dependencies (Windows Native Bindings)
+        shell: pwsh
+        run: |
+          # Fix npm cross-platform optional dependency bug (npm/cli#4828)
+          Remove-Item -Force -ErrorAction SilentlyContinue package-lock.json
+          npm install --legacy-peer-deps
+          # Explicitly ensure Windows native binaries for Rolldown & esbuild are installed
+          npm install --no-save @rolldown/binding-win32-x64-msvc @esbuild/win32-x64 --legacy-peer-deps
 
       - name: 4. Build React / Vite Frontend
         run: npm run build
