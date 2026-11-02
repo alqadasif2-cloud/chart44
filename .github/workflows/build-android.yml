@@ -32,39 +32,34 @@ jobs:
           java-version: 17
           cache: 'gradle'
 
-      - name: 3. Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: 4. Grant Execute Permission for Gradlew
+      - name: 3. Auto-Accept Preinstalled Android SDK Licenses
         run: |
-          if [ -f "android/gradlew" ]; then
-            chmod +x android/gradlew
+          # Use pre-installed GitHub Actions Android SDK non-interactively
+          if [ -d "$ANDROID_HOME/cmdline-tools/latest/bin" ]; then
+            yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
           fi
 
-      - name: 5. Build Android APK with Gradle
+      - name: 4. Build Android APK with Gradle
         env:
           TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
         run: |
           cd android
-          if [ -f "gradlew" ]; then
-            ./gradlew assembleDebug --stacktrace
-          else
-            gradle assembleDebug --stacktrace
-          fi
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: 6. Locate Built APK
+      - name: 5. Locate Built APK
         run: |
           echo "Listing generated APKs:"
           ls -la android/app/build/outputs/apk/debug/ || ls -R android/app/build/outputs/
 
-      - name: 7. Upload Android APK Artifact
+      - name: 6. Upload Android APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: GoldSilver-android-debug-apk
           path: android/app/build/outputs/apk/debug/*.apk
           retention-days: 14
 
-      - name: 8. Create or Update GitHub Release (On Tag Push)
+      - name: 7. Create or Update GitHub Release (On Tag Push)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
