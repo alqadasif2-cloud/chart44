@@ -20,6 +20,7 @@ import {
   SUPPORTED_SYMBOLS,
   TF_SECONDS,
 } from './data/marketData';
+import { Capacitor } from '@capacitor/core';
 import {
   calculateHeikinAshi,
   calculateRenko,
@@ -85,6 +86,18 @@ export default function App() {
   const [availableSymbols, setAvailableSymbols] = useState<SymbolMeta[]>(() => marketDataService.getAvailableSymbols());
 
   useEffect(() => {
+    // Android Detection: If running natively inside Android APK via Capacitor, lock to API mode
+    const isNativeAndroid =
+      typeof window !== 'undefined' &&
+      Capacitor.isNativePlatform() &&
+      Capacitor.getPlatform() === 'android';
+
+    if (isNativeAndroid) {
+      marketDataService.setMode('api');
+      setAvailableSymbols(marketDataService.getAvailableSymbols());
+      return;
+    }
+
     marketDataService.onMT5StatusChange = (status) => {
       setMt5Status(status);
       const symbols = marketDataService.getAvailableSymbols();

@@ -1,6 +1,6 @@
 {
   "appId": "com.cchart.app",
-  "appName": "cchart",
+  "appName": "شارت - cchart",
   "webDir": "dist",
   "server": {
     "androidScheme": "https"

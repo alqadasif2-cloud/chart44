@@ -345,33 +345,34 @@ export const TopToolbar: React.FC<TopToolbarProps> = ({
 
       {/* Right controls: MT5 Status, General Status, API Key, Save Layout, Fullscreen */}
       <div className="flex items-center gap-2">
-        {/* MT5 Direct Connection Badge */}
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => {
-              if (onRefreshMT5) onRefreshMT5();
-              setShowMT5Details(!showMT5Details);
-            }}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded border text-xs font-semibold transition-all ${
-              mt5Status?.is_connected
-                ? 'bg-[#10b981]/15 text-[#10b981] border-[#10b981]/40 hover:bg-[#10b981]/25'
-                : 'bg-[#ef4444]/15 text-[#ef4444] border-[#ef4444]/40 hover:bg-[#ef4444]/25'
-            }`}
-            title="حالة اتصال MetaTrader 5 المباشرة (انقر لعرض التفاصيل وإعادة الفحص)"
-          >
-            <span
-              className={`w-2 h-2 rounded-full ${
-                mt5Status?.is_connected ? 'bg-[#10b981] animate-pulse' : 'bg-[#ef4444]'
+        {/* MT5 Direct Connection Badge (Windows Desktop only) */}
+        {marketDataService.getMode() !== 'api' && (
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => {
+                if (onRefreshMT5) onRefreshMT5();
+                setShowMT5Details(!showMT5Details);
+              }}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded border text-xs font-semibold transition-all ${
+                mt5Status?.is_connected
+                  ? 'bg-[#10b981]/15 text-[#10b981] border-[#10b981]/40 hover:bg-[#10b981]/25'
+                  : 'bg-[#ef4444]/15 text-[#ef4444] border-[#ef4444]/40 hover:bg-[#ef4444]/25'
               }`}
-            />
-            <span className="font-mono">MT5</span>
-            <span className="hidden sm:inline text-[11px] font-normal">
-              {mt5Status?.is_connected
-                ? `متصل ${mt5Status.account?.login ? `#${mt5Status.account.login}` : ''}`
-                : 'مفصول'}
-            </span>
-          </button>
+              title="حالة اتصال MetaTrader 5 المباشرة (انقر لعرض التفاصيل وإعادة الفحص)"
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  mt5Status?.is_connected ? 'bg-[#10b981] animate-pulse' : 'bg-[#ef4444]'
+                }`}
+              />
+              <span className="font-mono">MT5</span>
+              <span className="hidden sm:inline text-[11px] font-normal">
+                {mt5Status?.is_connected
+                  ? `متصل ${mt5Status.account?.login ? `#${mt5Status.account.login}` : ''}`
+                  : 'مفصول'}
+              </span>
+            </button>
 
           {/* MT5 Account Details Popover */}
           {showMT5Details && (
@@ -445,6 +446,7 @@ export const TopToolbar: React.FC<TopToolbarProps> = ({
             </div>
           )}
         </div>
+      )}
 
         {/* Status Badge */}
         <div className="hidden lg:flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-[#10151c] border border-[#2a3542]">

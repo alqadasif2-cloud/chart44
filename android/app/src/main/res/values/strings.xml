@@ -1,3 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">الذهب والفضة</string>
+    <string name="app_name">شارت - cchart</string>
+    <string name="title_activity_main">شارت - cchart</string>
+    <string name="package_name">com.cchart.app</string>
+    <string name="custom_url_scheme">com.cchart.app</string>
 </resources>
