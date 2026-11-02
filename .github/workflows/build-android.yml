@@ -1,0 +1,74 @@
+name: Build Android App (APK)
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    name: Build Android APK (Debug)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 2. Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: 3. Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 4. Grant Execute Permission for Gradlew
+        run: |
+          if [ -f "android/gradlew" ]; then
+            chmod +x android/gradlew
+          fi
+
+      - name: 5. Build Android APK with Gradle
+        env:
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+        run: |
+          cd android
+          if [ -f "gradlew" ]; then
+            ./gradlew assembleDebug --stacktrace
+          else
+            gradle assembleDebug --stacktrace
+          fi
+
+      - name: 6. Locate Built APK
+        run: |
+          echo "Listing generated APKs:"
+          ls -la android/app/build/outputs/apk/debug/ || ls -R android/app/build/outputs/
+
+      - name: 7. Upload Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GoldSilver-android-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          retention-days: 14
+
+      - name: 8. Create or Update GitHub Release (On Tag Push)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: android/app/build/outputs/apk/debug/*.apk
+          draft: false
+          prerelease: false
+          generate_release_notes: true
